@@ -63,7 +63,7 @@ Files
 
 Installation procedure
 --
-By default your `ImageJ` program has no shortcut to the **ACT macro**. The objective of this installation procedure is to transfer automatically the **ACT macro** and all its required files within `ImageJmMacros` subfolder.
+By default your `ImageJ` program has no shortcut to the **ACT macro**. The objective of this installation procedure is to transfer automatically the **ACT macro** and all its required files within `ImageJ/Macros` subfolder.
  Finally, for convenient usage, shortcuts will be automatically generated within
 the Plugins/Macros menu. If you have already a version of **ACT**, the installation procedure will overwrite it, making easy updating of your system.
 
