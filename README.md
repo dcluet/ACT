@@ -1,4 +1,4 @@
-#>Automated Tracking of Centrosomes
+#Automated Tracking of Centrosomes
 
 ##Autors
 * CLUET David      david.cluet@ens-lyon.fr
