@@ -1,11 +1,15 @@
-#Automated Tracking of Centrosomes
+Automated Tracking of Centrosomes
+===
 
-##Autors
-* CLUET David      david.cluet@ens-lyon.fr
-* SPICHTY Martin   spichty.martin@ens-lyon.fr
-* DELATTRE Marie   marie.delattre@ens-lyon.fr
+Autors
+--
+* CLUET David: david.cluet@ens-lyon.fr
+* SPICHTY Martin: spichty.martin@ens-lyon.fr
+* DELATTRE Marie: marie.delattre@ens-lyon.fr
 
-##license
+License
+--
+
 Copyright CNRS 2013
 
 This software is a computer program whose purpose is to automatically track
