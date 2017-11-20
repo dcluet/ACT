@@ -1,7 +1,7 @@
 **A**utomated **T**racking of **C**entrosomes
 ===
 
-Autors
+Authors
 --
 * CLUET David:     david.cluet@ens-lyon.fr
 * SPICHTY Martin:  spichty.martin@ens-lyon.fr
