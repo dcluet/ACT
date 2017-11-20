@@ -7,7 +7,7 @@ Comments in english
 
 */
 
-selectWindow("Installation.txt");			//Select the text window of the installation macro
+selectWindow("Installation.ijm");			//Select the text window of the installation macro
 run("Close");						//The text window is closed to simplify the interface 
 requires("1.47s");					//Verification that the current version of imageJ is compatible
 
@@ -44,10 +44,10 @@ PathFolderInput =File.directory;					//Retrieve the path of the folder containin
 
 
 
-PathMotor = PathFolderInput+ "ACT_Motor_CommandLine.txt";			//Create the variable containing the path for the "ACT_Motor_CommandLine.txt" file (main program)
-PathCommandLine = PathFolderInput+ "ACT_Table_CommandLine_creation.txt";	//Create the variable containing the path for the "ACT_Table_CommandLine_creation.txt" file (GUI)
-PathCommandSUM = PathFolderInput+ "CMD_SUM.txt";				//Create the variable containing the path for the "CMD_SUM.txt" file (contains the code to be implemented in the startupmacros)
-PathImage = PathFolderInput+ "ACT.jpg";						//Creation of the variable containing the path for the "ACT.jpg" file
+PathMotor = PathFolderInput+ "Macro" +File.separator() +"ACT_Motor_CommandLine.ijm";			//Create the variable containing the path for the "ACT_Motor_CommandLine.txt" file (main program)
+PathCommandLine = PathFolderInput+ "Macro" +File.separator() +"ACT_Table_CommandLine_creation.ijm";	//Create the variable containing the path for the "ACT_Table_CommandLine_creation.txt" file (GUI)
+PathCommandSUM = PathFolderInput+ "Macro" +File.separator() +"CMD_SUM.ijm";				//Create the variable containing the path for the "CMD_SUM.txt" file (contains the code to be implemented in the startupmacros)
+PathImage = PathFolderInput+ "Macro" +File.separator() +"ACT.jpg";					//Create the variable containing the path for the "ACT.jpg" file
 
 
 
