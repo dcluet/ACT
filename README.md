@@ -117,6 +117,8 @@ By default your `ImageJ` program has no shortcut to the **ACT macro**. The objec
  Finally, for convenient usage, shortcuts will be automatically generated within
 the Plugins/Macros menu. If you have already a version of **ACT**, the installation procedure will overwrite it, making easy updating of your system.
 
+The following procedure is described in our online tutorial video: http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/actinstallation.mp4
+
 1. First launch the `ImageJ` program.
 2. Open the folder you downloaded from our web site. It contains the current
 version of the **ACT** macro and the `Installation.ijm` file. Drag this file and drop it on `ImageJ` command bar. A new window will automatically pop up.
@@ -130,4 +132,4 @@ menu:
     - **A.C.T.**
     - **A.C.T. Command-Lines LAUNCHER**
 
-For further informations concerning the program please refer to the *ACT_User_Guide_CeCILL_2014-02-28.pdf* file.
+For further informations concerning the program please refer to the *ACT_User_Guide_CeCILL_2014-02-28.pdf* file or to our online tracking tutorial video: http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/acttutorial.mp4
