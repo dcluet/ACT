@@ -105,7 +105,7 @@ Files
     - LICENSE.txt
     - [] **doc**
         - *ACT_User_Guide_CeCILL_2014-02-28.pdf*
-        - *journal.pone.0093718.PDF*
+        - *ACT_User_Guide_CeCILL_2014-02-28.docx*
     - [] **src**
         - `Installation.ijm`
         - [] **Macro**
