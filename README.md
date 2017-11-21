@@ -14,6 +14,7 @@ Cluet D(1), Stébé PN(1), Riche S(1), Spichty M(1), Delattre M(1).
 http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0093718
 
 Author information:
+
 (1)Laboratory of Molecular Biology of the Cell, Ecole Normale Supérieure de Lyon,
 Centre National de la Recherche Scientifique, Lyon, France.
 
