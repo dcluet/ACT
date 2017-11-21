@@ -135,4 +135,5 @@ menu:
     - **A.C.T.**
     - **A.C.T. Command-Lines LAUNCHER**
 
-For further informations concerning the program please refer to the *ACT_User_Guide_CeCILL_2014-02-28.pdf* file or to our online tracking tutorial video: http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/acttutorial.mp4
+For further informations concerning the program please refer to the *ACT_User_Guide_CeCILL_2014-02-28.pdf* file or to our online tracking tutorial video:
+http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/acttutorial.mp4
