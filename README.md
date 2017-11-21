@@ -81,7 +81,7 @@ warranty  and the software's author,the holder of the economic rights, and the
 successive licensors have only limited liability.
 >
 >In this respect, the user's attention is drawn to the risks associated with
-loading, using, modifying and/or developing or reACT.jpgproducing the software by the
+loading, using, modifying and/or developing or reproducing the software by the
 user in light of its specific status of free software, that may mean  that it
 is complicated to manipulate, and that also therefore means  that it is
 reserved for developers  and  experienced professionals having in-depth
