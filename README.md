@@ -1,6 +1,55 @@
 Automated Tracking of Centrosomes
 ===
 
+Publication
+--
+
+*PLoS One. 2014 Apr 24;9(4):e93718. doi: 10.1371/journal.pone.0093718. eCollection 2014.*
+http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0093718
+
+**Automated high-throughput quantification of mitotic spindle positioning from DIC
+movies of Caenorhabditis embryos.**
+
+Cluet D(1), Stébé PN(1), Riche S(1), Spichty M(1), Delattre M(1).
+
+Author information:
+(1)Laboratory of Molecular Biology of the Cell, Ecole Normale Supérieure de Lyon,
+Centre National de la Recherche Scientifique, Lyon, France.
+
+>**Abstract**: The mitotic spindle is a microtubule-based structure that elongates to accurately
+segregate chromosomes during anaphase. Its position within the cell also dictates
+the future cell cleavage plan, thereby determining daughter cell orientation
+within a tissue or cell fate adoption for polarized cells. Therefore, the mitotic
+spindle ensures at the same time proper cell division and developmental
+precision. Consequently, spindle dynamics is the matter of intensive research.
+Among the different cellular models that have been explored, the one-cell stage
+C. elegans embryo has been an essential and powerful system to dissect the
+molecular and biophysical basis of spindle elongation and positioning. Indeed, in
+this large and transparent cell, spindle poles (or centrosomes) can be easily
+detected from simple DIC microscopy by human eyes. To perform quantitative and
+high-throughput analysis of spindle motion, we developed a computer program ACT
+for Automated-Centrosome-Tracking from DIC movies of C. elegans embryos. We
+therefore offer an alternative to the image acquisition and processing of
+transgenic lines expressing fluorescent spindle markers. Consequently,
+experiments on large sets of cells can be performed with a simple setup using
+inexpensive microscopes. Moreover, analysis of any mutant or wild-type
+backgrounds is accessible because laborious rounds of crosses with transgenic
+lines become unnecessary. Last, our program allows spindle detection in other
+nematode species, offering the same quality of DIC images but for which
+techniques of transgenesis are not accessible. Thus, our program also opens the
+way towards a quantitative evolutionary approach of spindle dynamics. Overall,
+our computer program is a unique macro for the image- and movie-processing
+platform ImageJ. It is user-friendly and freely available under an open-source
+licence. ACT allows batch-wise analysis of large sets of mitosis events. Within 2
+minutes, a single movie is processed and the accuracy of the automated tracking
+matches the precision of the human eye.
+
+DOI: 10.1371/journal.pone.0093718
+
+PMCID: PMC3998942
+
+PMID: 24763198  [Indexed for MEDLINE]
+
 Authors
 --
 * **CLUET David**:     david.cluet@ens-lyon.fr
