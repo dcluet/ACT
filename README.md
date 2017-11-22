@@ -1,6 +1,8 @@
 Automated Tracking of Centrosomes
 ===
 
+![Example](doc/ACT_analysis.jpg)
+
 Publication
 --
 
@@ -56,9 +58,11 @@ PMID: 24763198  [Indexed for MEDLINE]
 
 Authors
 --
-* **CLUET David**:     david.cluet@ens-lyon.fr
-* **SPICHTY Martin**:  spichty.martin@ens-lyon.fr
-* **DELATTRE Marie**:  marie.delattre@ens-lyon.fr
+|  |![LBMC Logo](doc/Logo_LBMC.jpg) ![CNRS Logo](doc/Logo_cnrs.jpg) ![ENS Logo](doc/Logo_ens.jpg) |
+-----------------------------|------------|
+**CLUET David**|     david.cluet@ens-lyon.fr
+**SPICHTY Martin**|  spichty.martin@ens-lyon.fr
+**DELATTRE Marie**|  marie.delattre@ens-lyon.fr
 
 License
 --
