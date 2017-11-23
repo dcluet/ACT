@@ -108,7 +108,11 @@ Files
     - README.md
     - LICENSE.txt
     - [] **doc**
+        - *ACT_analysis.jpg*
         - *ACT_User_Guide_CeCILL_2014-02-28.pdf*
+        - *Logo_cnrs.jpg*
+        - *Logo_ens.jpg*
+        - *Logo_LBMC.jpg*
     - [] **src**
         - `Installation.ijm`
         - `Installation_FIJI.ijm`
