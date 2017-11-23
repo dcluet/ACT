@@ -109,7 +109,6 @@ Files
     - LICENSE.txt
     - [] **doc**
         - *ACT_User_Guide_CeCILL_2014-02-28.pdf*
-        - *ACT_User_Guide_CeCILL_2014-02-28.docx*
     - [] **src**
         - `Installation.ijm`
         - `Installation_FIJI.ijm`
