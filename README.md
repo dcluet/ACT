@@ -112,6 +112,7 @@ Files
         - *ACT_User_Guide_CeCILL_2014-02-28.docx*
     - [] **src**
         - `Installation.ijm`
+        - `Installation_FIJI.ijm`
         - [] **Macro**
             - `ACT_Motor_CommandLine.ijm`
             - `ACT_Table_CommandLine_creation.ijm`
@@ -128,7 +129,7 @@ The following procedure is described in our online tutorial video: http://www.en
 
 1. First launch the `ImageJ` program.
 2. Open the folder you downloaded from our web site. It contains the current
-version of the **ACT** macro and the `Installation.ijm` file. Drag this file and drop it on `ImageJ` command bar. A new window will automatically pop up.
+version of the **ACT** macro and the `Installation.ijm` file. Drag this file and drop it on `ImageJ` command bar (If you are currently working on `FIJI` please use the `Installation_FIJI.ijm` file). A new window will automatically pop up.
 3. Use in the menu bar the `Macros/Run Macro` command.
 4. The previous window disappears and `License agreement` window of the installation program is displayed. `Check` the license agreement box. `Click` on `OK` to proceed with the installation.
 5. The installation is then performed in few seconds. At the end of the process the program inform you of the success of the installation.
