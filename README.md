@@ -13,9 +13,7 @@ movies of Caenorhabditis embryos.**
 Cluet D(1), Stébé PN(1), Riche S(1), Spichty M(1), Delattre M(1).
 
 
-*PLoS One. 2014 Apr 24;9(4):e93718. doi: 10.1371/journal.pone.0093718. eCollection 2014.*
-
-http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0093718
+[*PLoS One. 2014 Apr 24;9(4):e93718. doi: 10.1371/journal.pone.0093718. eCollection 2014.*](http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0093718)
 
 Author information:
 
@@ -60,9 +58,9 @@ Authors
 --
 | ![LBMC Logo](doc/Logo_LBMC.jpg) ![CNRS Logo](doc/Logo_cnrs.jpg) ![ENS Logo](doc/Logo_ens.jpg) | |
 -----------------------------|------------|
-**CLUET David**|     david.cluet@ens-lyon.fr
-**SPICHTY Martin**|  spichty.martin@ens-lyon.fr
-**DELATTRE Marie**|  marie.delattre@ens-lyon.fr
+**CLUET David**|     [david.cluet@ens-lyon.fr](david.cluet@ens-lyon.fr)
+**SPICHTY Martin**|  [spichty.martin@ens-lyon.fr](david.cluet@ens-lyon.fr)
+**DELATTRE Marie**|  [marie.delattre@ens-lyon.fr](david.cluet@ens-lyon.fr)
 
 License
 --
@@ -99,8 +97,8 @@ of the CeCILL license and that you accept its terms.
 
 Requirements
 --
-* The **ACT** macro requires `ImageJ v1.47s` or higher: https://imagej.nih.gov/ij/download.html
-* The `.mov` files require the `Quicktime plugin` for ImageJ: https://imagej.nih.gov/ij/plugins/movie-opener.html
+* The **ACT** macro requires `ImageJ v1.47s` or higher ([Download](https://imagej.nih.gov/ij/download.html)).
+* The `.mov` files require the `Quicktime plugin` for ImageJ ([Download](https://imagej.nih.gov/ij/plugins/movie-opener.html)) 
 
 Files
 --
@@ -109,7 +107,6 @@ Files
     - LICENSE.txt
     - [] **doc**
         - *ACT_analysis.jpg*
-        - *ACT_User_Guide_CeCILL_2014-02-28.pdf*
         - *Logo_cnrs.jpg*
         - *Logo_ens.jpg*
         - *Logo_LBMC.jpg*
@@ -124,11 +121,11 @@ Files
 
 Installation procedure
 --
-By default your `ImageJ` program has no shortcut to the **ACT macro**. The objective of this installation procedure is to transfer automatically the **ACT macro** and all its required files within `ImageJ/Macros` subfolder.
+By default your `ImageJ` program has no shortcut to the **ACT macro**. The objective of this installation procedure is to transfer automatically the **ACT macro** and all its required files within `ImageJ/Macros` sub-folder.
  Finally, for convenient usage, shortcuts will be automatically generated within
 the Plugins/Macros menu. If you have already a version of **ACT**, the installation procedure will overwrite it, making easy updating of your system.
 
-The following procedure is described in our online tutorial video: http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/actinstallation.mp4
+The following procedure is described in our on-line [installation tutorial video](http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/actinstallation.mp4):
 
 1. First launch the `ImageJ` program.
 2. Open the folder you downloaded from our web site. It contains the current
@@ -143,5 +140,6 @@ menu:
     - **A.C.T.**
     - **A.C.T. Command-Lines LAUNCHER**
 
-For further informations concerning the program please refer to the *ACT_User_Guide_CeCILL_2014-02-28.pdf* file or to our online tracking tutorial video:
-http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/acttutorial.mp4
+For further informations concerning the program please refer to the *ACT_User_Guide_CeCILL_2014-02-28.pdf* file or to our on-line:
+- [tracking tutorial video](http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/acttutorial.mp4).
+- pdf [user guide](http://www.ens-lyon.fr/LBMC/fichiers/equipe-spichty/act-user-guide-cecill-2014-02-28.pdf).
