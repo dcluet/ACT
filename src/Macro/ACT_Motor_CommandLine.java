@@ -112,6 +112,11 @@ Extension = MonInput[26];			//Extension of the movie (.tif, .mov,...)
 
 	ImageCourante = getTitle();	//Get the title of the movie
 	
+	// Get rid of Dimensions
+	getDimensions(width, height, channels, slices, frames);
+	Stack.setXUnit("pixel");
+	run("Properties...", "channels=" + channels + " slices=" + slices + " frames=" + frames + " pixel_width=1 pixel_height=1 voxel_depth=1.0000000");
+	
 //Crop the Zygote
 	makeRectangle(Xz, Yz, Wz, Hz);	//Draw the rectangle using the user's parameters
 	run("Crop");			//Crop the movie

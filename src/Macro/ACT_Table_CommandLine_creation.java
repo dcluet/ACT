@@ -1,40 +1,88 @@
 macro "CommandLineCreation"{
 
-Version = "1.31_2014-02-17";
+	Version = "1.31_2023_05_12";
 
-/*Major modifications:
+	/*Major modifications:
 
-Updates in comments
-Comments in english
-Explicit naming of hbb and dsc in the GUI
+	Updates in comments
+	Comments in english
+	Explicit naming of hbb and dsc in the GUI
 
-*/
+	*/
 
-//CeCILL Lincense window 
-PathImage = getDirectory("macros")+File.separator()+"ACT_Batch"+File.separator+"ACT.jpg";
-open(PathImage);
-T=getTitle;
-waitForUser("Copyright CNRS 2013\n \nCLUET David      david.cluet@ens-lyon.fr\nSTEBE Pierre Nicolas   pierre.stebe@ens-lyon.fr\nSPICHTY Martin   spichty.martin@ens-lyon.fr\nDELATTRE Marie   marie.delattre@ens-lyon.fr\n \nThis software is a computer program whose purpose is to automatically track centrosomes\nin DIC movies.\n \nThis software is governed by the CeCILL license under French law and abiding by the rules\nof distribution of free software. You can use, modify and/or redistribute the software\nunder the terms of the CeCILL license as circulated by CEA, CNRS and INRIA at the following URL\nhttp://www.cecill.info/index.en.html.\n \nAs a counterpart to the access to the source code and  rights to copy, modify and redistribute\ngranted by the license, users are provided only with a limited warranty  and the software's author,\nthe holder of the economic rights, and the successive licensors have only limited liability.\n \nIn this respect, the user's attention is drawn to the risks associated with loading, using, modifying\nand/or developing or reproducing the software by the user in light of its specific status of free\nsoftware, that may mean  that it is complicated to manipulate, and that also therefore means  that\nit is reserved for developers  and  experienced professionals having in-depth computer knowledge. Users\nare therefore encouraged to load and test the software's suitability as regards their requirements\nin conditions enabling the security of their systems and/or data to be ensured and, more generally,\nto use and operate it in the same conditions as regards security.\n \nThe fact that you are presently reading this means that you have had knowledge of the CeCILL license\nand that you accept its terms.\n");
-selectWindow(T);
-close();
+	//CeCILL Lincense window 
+	PathImage = getDirectory('macros') +File.separator() +'ACT_Batch';
+	PathImage += File.separator + 'ACT.jpg';
+	open(PathImage);
 
+	// Get the image title
+	T = getTitle();
 
+	msg = 'Copyright CNRS 2013\n \n';
+	msg += 'CLUET David      david.cluet@ens-lyon.fr\n';
+	msg += 'STEBE Pierre Nicolas   pierre.stebe@ens-lyon.fr\n';
+	msg += 'SPICHTY Martin   spichty.martin@ens-lyon.fr\n';
+	msg += 'DELATTRE Marie   marie.delattre@ens-lyon.fr\n \n';
+	msg += 'This software is a computer program whose purpose is to ';
+	msg += 'automatically track centrosomes\nin DIC movies.\n \n';
+	msg += 'This software is governed by the CeCILL license under French law ';
+	msg += 'and abiding by the rules\nof distribution of free software. ';
+	msg += 'You can use, modify and/or redistribute the software\n';
+	msg += 'under the terms of the CeCILL license as circulated by CEA, CNRS';
+	msg += ' and INRIA at the following';
+	msg += 'URL\nhttp://www.cecill.info/index.en.html.\n \n';
+	msg += 'As a counterpart to the access to the source code and  rights to ';
+	msg += 'copy, modify and redistribute\ngranted by the license, users are ';
+	msg += 'provided only with a limited warranty  and the software s author,';
+	msg += '\nthe holder of the economic rights, and the successive licensors ';
+	msg += 'have only limited liability.\n \nIn this respect, the user s ';
+	msg += 'attention is drawn to the risks associated with loading, using, ';
+	msg += 'modifying\nand/or developing or reproducing the software by the ';
+	msg += 'user in light of its specific status of free\nsoftware, that may ';
+	msg += 'mean  that it is complicated to manipulate, and that also ';
+	msg += 'therefore means  that\nit is reserved for developers  and  ';
+	msg += 'experienced professionals having in-depth computer knowledge. ';
+	msg += 'Users\nare therefore encouraged to load and test the software s ';
+	msg += 'suitability as regards their requirements\nin conditions enabling ';
+	msg += 'the security of their systems and/or data to be ensured and, more ';
+	msg += 'generally,\nto use and operate it in the same conditions as ';
+	msg += 'regards security.\n \nThe fact that you are presently reading ';
+	msg += 'this means that you have had knowledge of the CeCILL license\nand ';
+	msg += 'that you accept its terms.\n';
 
-//Default parameters to feed the GUI
-RefExt =".mov";		//movie extension
-Mode = 1;		//Advanced mode "On"
-Reso = 0.129;		//resolution µm/pix
-t = 0.5;		//time gap between 2 images
-SensAnt = 1;		//Direction of analysis for the anterior centrosome (FORWARD)
-BoxAnt = 1;		//Boundary box type for the anterior centrosome (RETROGRADE)
-DCAnt = 1.25;		//Diameter of the scanning circle for the anterior centrosome (dsc)
-LFAnt = 1;		//Width of the focus square used for the anterior centrosome
-LPAnt = 1.125;		//Height of the boundary box for the anterior centrosome (hbb)
-SensPost = 0;		//Direction of analysis for the posterior (REVERSE)
-BoxPost = 0;		//Boundary box type for the posterior centrosome (ANTEROGRADE)
-DCPost = 1.125;		//Diameter of the scanning circle for the posterior centrosome (dsc)
-LFPost = 1;		//Width of the focus square used for the posterior centrosome 
-LPPost = 1.375;		//Height of the boundary box for the posterior centrosome (hbb)
+	waitForUser(msg);
+	selectWindow(T);
+	close();
+
+	// Default parameters to feed the GUI
+	// movie extension
+	RefExt =".mov";
+	// Advanced mode "On"
+	Mode = 1;
+	// resolution um/pix
+	Reso = 0.0530001;
+	// time gap between 2 images
+	t = 0.5;
+	// Direction of analysis for the anterior centrosome (FORWARD)
+	SensAnt = 1;
+	// Boundary box type for the anterior centrosome (RETROGRADE)
+	BoxAnt = 1;
+	// Diameter of the scanning circle for the anterior centrosome (dsc)
+	DCAnt = 1.25;
+	// Width of the focus square used for the anterior centrosome
+	LFAnt = 1;
+	// Height of the boundary box for the anterior centrosome (hbb)
+	LPAnt = 1.125;
+	// Direction of analysis for the posterior (REVERSE)
+	SensPost = 0;
+	// Boundary box type for the posterior centrosome (ANTEROGRADE)
+	BoxPost = 0;
+	// Diameter of the scanning circle for the posterior centrosome (dsc)
+	DCPost = 1.125;
+	// Width of the focus square used for the posterior centrosome
+	LFPost = 1;
+	// Height of the boundary box for the posterior centrosome (hbb)
+	LPPost = 1.375;
 
 //Calling the "Principal" function with default parameters and retrieving user's adjusted setting as a string (R)
 R = Principal(1.3, RefExt, Mode, Reso, t, SensAnt, BoxAnt, DCAnt, LFAnt, LPAnt, SensPost, BoxPost, DCPost, LFPost, LPPost);
@@ -43,7 +91,7 @@ R2 = split(R, "\t");	//All the user's adjusted parameters are extracted from the
 
 	RefExt = R2[0];			//movie extension
 	Mode = parseFloat(R2[1]);	//Advanced mode
-	Reso = parseFloat(R2[2]);	//resolution µm/pix
+	Reso = parseFloat(R2[2]);	//resolution ï¿½m/pix
 	t = parseFloat(R2[3]);		//time gap between 2 images
 	SensAnt = parseFloat(R2[4]);	//Direction of analysis for the anterior centrosome
 	BoxAnt = parseFloat(R2[5]);	//Boundary box type for the anterior centrosome
@@ -198,7 +246,13 @@ if(ListMovies[i] !=""){
 	}else{
 	open(Path1);						//...or IJ opener
 	}
-	
+
+//Change properties
+	getDimensions(width, height, channels, slices, frames);
+	Stack.setXUnit("pixel");
+	run("Properties...", "channels=" + channels + " slices=" + slices + " frames=" + frames + " pixel_width=1 pixel_height=1 voxel_depth=1.0000000");
+
+
 //Get movie dimension and name	
 	NomImage = getTitle();
 	H = getHeight();
@@ -235,7 +289,7 @@ CL = ""+CL + Path1 + "\t";
 	W = getWidth();
 	
 
-	HRef =518;		//Height of the zygote in the reference movie (in pix)
+	HRef = 518;		//Height of the zygote in the reference movie (in pix)
  	DiametreCercleR = 60;	//Diameter of scanning circle for the reference movie (dsc in pix).	
 	
 	//Calculating the ratio between the actual movie dimension and the reference one
@@ -243,8 +297,8 @@ CL = ""+CL + Path1 + "\t";
 	
 	//Adapt research parameters to the actual dimension of the movie.
 	//The research algorythm will then be fitted to the movie resolution, making the user's parameters only dependent on strain and/or phenotype
-	LargFenetre = round(LargFenetre*ratio);				//Width of the focus square where the research will be performed
-	LargPlotProfile = round(LargPlotProfile*ratio);			//Height of the boundary box (hbb)
+	LargFenetre = round(LFAnt*ratio);				//Width of the focus square where the research will be performed
+	LargPlotProfile = round(LPAnt*ratio);			//Height of the boundary box (hbb)
 	DiametreCercle = round(DiametreCercleR*ratio);			//Diameter of the scanning Circle (dsc)
 
 	//Cut the movie using the function MontageFilm
@@ -412,7 +466,7 @@ Listing=split(File.openAsString(dir+"ListCommands.txt"),"\n");
 	Arguments = Listing[z];
 	
 	if(Listing[z] != ""){
-		runMacro(getDirectory("macros")+File.separator()+"ACT_Batch"+File.separator()+"ACT_Motor_CommandLine.txt", Arguments);
+		runMacro(getDirectory("macros")+File.separator()+"ACT_Batch"+File.separator()+"ACT_Motor_CommandLine.java", Arguments);
 	}
 	}
 
