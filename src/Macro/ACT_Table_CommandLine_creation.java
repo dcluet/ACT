@@ -29,8 +29,8 @@ macro "CommandLineCreation"{
 	msg += 'and abiding by the rules\nof distribution of free software. ';
 	msg += 'You can use, modify and/or redistribute the software\n';
 	msg += 'under the terms of the CeCILL license as circulated by CEA, CNRS';
-	msg += ' and INRIA at the following';
-	msg += 'URL\nhttp://www.cecill.info/index.en.html.\n \n';
+	msg += ' and INRIA at the following URL\n';
+	msg += 'http://www.cecill.info/index.en.html.\n \n';
 	msg += 'As a counterpart to the access to the source code and  rights to ';
 	msg += 'copy, modify and redistribute\ngranted by the license, users are ';
 	msg += 'provided only with a limited warranty  and the software s author,';
@@ -312,11 +312,8 @@ macro "CommandLineCreation"{
 			// The rectangle drawn by the user is stored in the roiManager 
 			roiManager("Add"); 	
 
-			// Initialisation of the command line	
-			CL = '';
-
-			// Update the command line with the path of the movie
-			CL += Path1 + '\t';	
+			// Initiate the command line with the path of the movie
+			CL = Path1 + '\t';
 
 			// Crop of the zygote in all frames
 			// Get "zygote rectangle" position and dimensions
@@ -330,7 +327,7 @@ macro "CommandLineCreation"{
 			// Update command line with "zygote rectangle" position 
 			// and dimensions
 			CL += '' + Xz + '\t' + Yz + '\t' + Wz + '\t' + Hz+ '\t';
-	
+
 			// Crop the zygote and update the dimensions of the movie
 			run('Crop');
 			H = getHeight();
@@ -419,7 +416,7 @@ macro "CommandLineCreation"{
 					 DiametreCercle);
 			msg = 'Position this circle on the center\n';
 			msg += 'of the anterior spindle.\nThen press OK.';
-			waitForUser(ms);
+			waitForUser(msg);
 
 			// To avoid the waitForUser commands to be considered as redundant 
 			// and make ImageJ bugging
@@ -454,192 +451,198 @@ macro "CommandLineCreation"{
 			XpostF = List.getValue('X');
 			YpostF= List.getValue('Y');
 
-//Display advanced settings
+			// Display advanced settings
+			// Set the abort movie option to false	
+			Annul = 0;	
 	
-Annul = 0;	//Set the abort movie option to false
+			if(Mode == 1){
+				// The user has the possibility to remove the movie from the 
+				// analysis (problems during acquisition...)
+				Choix=newArray('Analysis', 'Abort');
+				labels = newArray('Forward', 'Retrograde');
+				RefAnt = newArray(SensAnt, BoxAnt);
+				RefPost = newArray(SensPost, BoxPost);
 	
-	if(Mode==1){
+				// User interface fed with "generic" parameters obtained from
+				// the function "Principal"
+				Dialog.create('Advanced settings');
+				msg1 = 'Movie analysis will be performed with these parameters';
+				msg1 += '\nStarting frame: ' + Sstart + '\n\nReference frame: ';
+				msg1 += '' + Origine + '\n\nEnding frame: ' + Send;
+				Dialog.addMessage(msg1);
+				Dialog.addMessage('Please indicate the movie resolution:');
+				Dialog.addNumber('1 pixel =', Reso);
+				Dialog.addSlider('Time scale (sec)', 0.25, 2, t);
+				msg2 = 'If the movie quality is not good you can abort and\n';
+				msg2 += 'jump to the next movie';
+				Dialog.addMessage(msg2);
+				Dialog.addMessage('ANTERIOR ASTER TRACKING SETTINGS:');
+				Dialog.addCheckboxGroup(1, 2, labels, RefAnt);
+				Dialog.addNumber('Diameter of the Scanning Circle (dsc)',
+								 DCAnt);
+				Dialog.addNumber('Height of the Boundary Box (hbb)',
+								 LPAnt);
+				Dialog.addMessage('');
+				Dialog.addMessage('POSTERIOR ASTER TRACKING SETTINGS:');
+				Dialog.addCheckboxGroup(1, 2, labels, RefPost);
+				Dialog.addNumber('Diameter of the Scanning Circle (dsc)',
+								 DCPost);
+				Dialog.addNumber('Height of the Boundary Box (hbb)',
+								 LPPost);
+				Dialog.addChoice('Proceed?', Choix);
+				Dialog.show();
 	
-	Choix=newArray("Analysis", "Abort");	//The user has the possibility to remove the movie from the analysis (problems during acquisition...)
-	labels = newArray("Forward", "Retrograde");
-	RefAnt = newArray(SensAnt,BoxAnt);
-	RefPost = newArray(SensPost,BoxPost);
+				//Updating the analysis parameters for this movie
+				Reso = Dialog.getNumber();
+				t = Dialog.getNumber();
+				Opt = Dialog.getChoice();
+				SensAnt = Dialog.getCheckbox();
+				BoxAnt = Dialog.getCheckbox();
+				DCAnt = Dialog.getNumber();
+				LPAnt = Dialog.getNumber();
+				SensPost = Dialog.getCheckbox();
+				BoxPost = Dialog.getCheckbox();
+				DCPost = Dialog.getNumber();
+				LPPost = Dialog.getNumber();
 	
-	//User interface fed with "generic" parameters obtained from the function "Principal"
-	Dialog.create("Advanced settings");
-	Dialog.addMessage("Movie analysis will be performed with these parameters\nStarting frame: "+Sstart+"\n\nReference frame: "+Origine+"\n\nEnding frame: "+ Send);
-	Dialog.addMessage("Please indicate the movie resolution:");
-	Dialog.addNumber("1 pixel =", Reso);
-	Dialog.addSlider("Time scale (sec)", 0.25, 2, t);
-	Dialog.addMessage("If the movie quality is not good you can abort and\n jump to the next movie");
-	Dialog.addMessage("ANTERIOR ASTER TRACKING SETTINGS:");
-	Dialog.addCheckboxGroup(1,2,labels, RefAnt);
-	Dialog.addNumber("Diameter of the Scanning Circle (dsc)", DCAnt);
-	Dialog.addNumber("Height of the Boundary Box (hbb)",  LPAnt);
-	Dialog.addMessage("");
-	Dialog.addMessage("POSTERIOR ASTER TRACKING SETTINGS:");
-	Dialog.addCheckboxGroup(1,2,labels, RefPost);
-	Dialog.addNumber("Diameter of the Scanning Circle (dsc)",  DCPost);
-	Dialog.addNumber("Height of the Boundary Box (hbb)",  LPPost);
-	Dialog.addChoice("Proceed?", Choix);
+				if(Opt == 'Abort'){
+					Annul = 1;
+				}
+			}
+
+			// Close the movie
+			close();
+
+			// Close the roiManager to eliminate all remaining ROI
+			selectWindow('ROI Manager');
+			run('Close');	
+
+			// If the user confirms the incorporation of this movie in the batch
+			// analysis the command line is created and saved. Else it is
+			// skipped.
+			if (Annul == 0){
+				// Updating the command line with all remaining parameters
+				CL += '' + Reso + '\t' + Sstart;
+				CL += '\t' + Origine + '\t' + Send + '\t' + t;	
+				CL += '\t' + Xant + '\t' + Yant;
+				CL += '\t' + XantF + '\t'+ YantF;
+				CL += '\t' + SensAnt + '\t' + BoxAnt + '\t' + DCAnt;
+				CL += '\t' + LPAnt + '\t' + Xpost + '\t'+ Ypost;
+				CL += '\t' + XpostF + '\t'+ YpostF;
+				CL += '\t' + SensPost + '\t' + BoxPost + '\t'+ DCPost;
+				CL += '\t' + LPPost + '\t'+ RefExt;	
+				// Add the command line to the "ListCommands.txt" file		
+				File.append(CL, dir + 'ListCommands.txt');
+			}
+		}
+	}	
+	// END OF THE LOOP FOR MOVIE PRE-TREATMENT
+
+	// LAUNCH THE ANALYSIS
+
+	// Dialog window to warn the user that the job will be submitted.
+	Dialog.create('End of the pre-Analysis process');
+	msg = 'The program will now analyse all the movies with\n';
+	msg += 'the parameters you entered.';
+	Dialog.addMessage(msg);
 	Dialog.show();
+
+	// Get all generated command lines
+	Listing = split(File.openAsString(dir + 'ListCommands.txt'), '\n'); 
+
+	// LOOP FOR JOB SUBMISSION
+
+	for(z=1; z<lengthOf(Listing); z++){
+		Arguments = Listing[z];
 	
-	//Updating the analysis parameters for this movie
-	Reso = Dialog.getNumber();
-	t = Dialog.getNumber();
-	Opt = Dialog.getChoice();
-	SensAnt = Dialog.getCheckbox();
-	BoxAnt = Dialog.getCheckbox();
-	DCAnt = Dialog.getNumber();
-	LPAnt = Dialog.getNumber();
-	SensPost = Dialog.getCheckbox();
-	BoxPost = Dialog.getCheckbox();
-	DCPost = Dialog.getNumber();
-	LPPost = Dialog.getNumber();
-	
-	if(Opt=="Abort"){
-	Annul = 1;
-	}
-	
-	
-}
-
-//Close the movie
-	close();
-
-//Close the roiManager to eliminate all remaining ROI
-	selectWindow("ROI Manager");
-	run("Close");	
-
-//If the user confirms the incorporation of this movie in the batch analysis the command line is created and saved. Else it is skipped.
-if (Annul==0){
-	
-//Updating the command line with all remaining parameters
-CL = ""+CL + Reso + "\t"+ Sstart+"\t"+ Origine+ "\t"+ Send+ "\t"+ t;	
-CL = ""	+CL
-		+ "\t"+ Xant 
-		+ "\t"+ Yant
-		+ "\t"+ XantF
-		+ "\t"+ YantF
-		+ "\t"+ SensAnt
-		+ "\t"+ BoxAnt
-		+ "\t"+ DCAnt
-		+ "\t"+ LPAnt
-		+ "\t"+ Xpost 
-		+ "\t"+ Ypost
-		+ "\t"+ XpostF
-		+ "\t"+ YpostF
-		+ "\t"+ SensPost
-		+ "\t"+ BoxPost
-		+ "\t"+ DCPost
-		+ "\t"+ LPPost
-		+ "\t"+ RefExt;	
-//Adding the command line to the "ListCommands.txt" file		
-File.append(CL,dir+"ListCommands.txt");
-
-
-}
-}
-}	
-
-//END OF THE LOOP FOR MOVIE PRE-TREATMENT
-
-
-
-//Launching of the analysis.
-
-//Dialog window to warn the user that the job will be submitted.
-Dialog.create("End of the pre-Analysis process");
-Dialog.addMessage("The program will now analyse all the movies with\nthe parameters you entered.");
-Dialog.show();
-
-//Get all generated command lines
-Listing=split(File.openAsString(dir+"ListCommands.txt"),"\n"); 
-
-
-//LOOP FOR JOB SUBMISSION
-
-	for(z=1; z<lengthOf(Listing);z++){
-	Arguments = Listing[z];
-	
-	if(Listing[z] != ""){
-		runMacro(getDirectory("macros")+File.separator()+"ACT_Batch"+File.separator()+"ACT_Motor_CommandLine.java", Arguments);
-	}
-	}
-
-//END OF LOOP FOR JOB SUBMISSION 	
-
-//Dialog window indicating the end of all analysis.
-//The user can choose to  display the output (needs sufficient memory) or just exit.
-ListeOption= newArray("Display results", "Exit program");	
-Dialog.create("End of the Analysis process");
-Dialog.addMessage("The program has analysed all your movies.");
-Dialog.addMessage("Indicate if you want the program to dislay ALL results movies\nor exit the program.");
-Dialog.addMessage("WARNING: Displaying all movies can require too much memory!");
-Dialog.setInsets(0, 25, 20);
-Dialog.addChoice("Option:", ListeOption);
-Dialog.show();	
-option = Dialog.getChoice();	
-
-if(option == "Exit program"){
-	exit();
-}
-
-//Display of all output movies
-if(option == "Display results"){
-
-DejaFait = File.openAsString(dir+"ListCommands.txt");
-ListingFait = split(DejaFait,"\n");
-
-//setBatchMode(false);
-	for(i=0; i<lengthOf(ListingFait); i++){
-		if(ListingFait[i] !=""){
-				Decomposition = split(ListingFait[i], "\t");
-				Path1 = Decomposition[0];
-		
-				open(Path1+ "_ASTERS.tif");
-				
+		if(Listing[z] != ''){
+			path = getDirectory('macros') + File.separator() + 'ACT_Batch';
+			path += File.separator() + 'ACT_Motor_CommandLine.java';
+			runMacro(path, Arguments);
 		}
 	}
-}	
-//End of display of output movies
+	// END OF LOOP FOR JOB SUBMISSION 	
 
-//FUNCTION ListFiles
- function listFiles(dir,ext) {
-     list = getFileList(dir);							//Get the list of all files and folder present in the current folder
-     for (i=0; i<list.length; i++) {
-        if (endsWith(list[i], ext)&&(endsWith(list[i],"_ASTERS.tif")==0)){	//In case of tif movies, a filters will remove all previous ouptput movies (characterized with "_ASTERS.tif" suffix)
-        print(dir+list[i]);							//Add the file with the correct extension to the list
+	// Dialog window indicating the end of all analysis.
+	// The user can choose to  display the output (needs sufficient memory)
+	// or just exit.
+	ListeOption= newArray('Display results', 'Exit program');	
+	Dialog.create('End of the Analysis process');
+	Dialog.addMessage('The program has analysed all your movies.');
+	msg1 = 'Indicate if you want the program to dislay ALL results movies\n';
+	msg1 += 'or exit the program.';
+	Dialog.addMessage(msg1);
+	msg2 = 'WARNING: Displaying all movies can require too much memory!';
+	Dialog.addMessage(msg2);
+	Dialog.setInsets(0, 25, 20);
+	Dialog.addChoice('Option:', ListeOption);
+	Dialog.show();	
+	option = Dialog.getChoice();	
+
+	if(option == 'Exit program'){
+		exit();
+	}
+
+	// Display of all output movies
+	if(option == "Display results"){
+		DejaFait = File.openAsString(dir + 'ListCommands.txt');
+		ListingFait = split(DejaFait, '\n');
+
+		// setBatchMode(false);
+		for(i=0; i<lengthOf(ListingFait); i++){
+			if(ListingFait[i] != ''){
+				Decomposition = split(ListingFait[i], "\t");
+				Path1 = Decomposition[0];
+				open(Path1 + '_ASTERS.tif');
+					
+			}
+		}
+	}	
+	// End of display of output movies
+
+// FUNCTION ListFiles
+function listFiles(dir, ext){
+	//Get the list of all files and folder present in the current folder
+	list = getFileList(dir);
+    for (i=0; i<list.length; i++){
+		// In case of tif movies, a filters will remove all previous ouptput
+		// movies (characterized with "_ASTERS.tif" suffix)
+		if (endsWith(list[i], ext) && (endsWith(list[i], '_ASTERS.tif') == 0)){
+			// Add the file with the correct extension to the list
+        	print(dir + list[i]);							
         }
-        if (endsWith(list[i], "/")){						//If the path correspond to a subfolder, it is analyzed.
-        listFiles(""+dir+list[i], ext);
+
+		// If the path correspond to a subfolder, it is analyzed.
+        if (endsWith(list[i], File.separator())){						
+        	listFiles('' + dir + list[i], ext);
         }         
-     }
-  }
+    }
+}
 
-
-//FUNCTION MontageFilm  
-  function MontageFilm(Reso, t){
-	
-	//Manual indication of the Beginning frame
-	waitForUser("Indicate FIRST frame of the movie\nand click OK!");
+// FUNCTION MontageFilm  
+function MontageFilm(Reso, t){
+	// Manual indication of the Beginning frame
+	waitForUser('Indicate FIRST frame of the movie\nand click OK!');
 	Sstart = getSliceNumber();
 	
-	wait(500);	//To avoid the waitForUser commands to be considered as redundant and make ImageJ bugging
+	// To avoid the waitForUser commands to be considered as redundant
+	// and make ImageJ bugging
+	wait(500);
 	
-	//Manual indication of the Origine frame
-	waitForUser("Indicate REFERENCE frame of the movie\nand click OK!");
+	// Manual indication of the Origine frame
+	waitForUser('Indicate REFERENCE frame of the movie\nand click OK!');
 	Origin = getSliceNumber();
 	wait(500);
 	
-	//Manual indication of the Ending frame
+	// Manual indication of the Ending frame
 	waitForUser("Indicate LAST frame of the movie\nand click OK!");
 	Send = getSliceNumber();
-	wait(500);	//To avoid the waitForUser commands to be considered as redundant and make ImageJ bugging
+	wait(500);
 
-	Resultat = newArray(3);	//Create an array that will contain the position of the refernce frames
-	Resultat[0]= Sstart;	
-	Resultat[1]= Origin;
+	// Create an array that will contain the position of the reference frames
+	Resultat = newArray(3);
+	Resultat[0] = Sstart;	
+	Resultat[1] = Origin;
 	Resultat[2] = Send;
 	
 	//Return the numbers of the frames to the main program
@@ -648,38 +651,51 @@ ListingFait = split(DejaFait,"\n");
 
 
 //FUNCTION Principal 
-function Principal(Version, RefExtIn, Mode, Reso, t, SensAnt, BoxAnt, DCAnt, LFAnt, LPAnt, SensPost, BoxPost, DCPost, LFPost, LPPost){
+function Principal(Version,
+				   RefExtIn,
+				   Mode,
+				   Reso,
+				   t,
+				   SensAnt,
+				   BoxAnt,
+				   DCAnt,
+				   LFAnt,
+				   LPAnt,
+				   SensPost,
+				   BoxPost,
+				   DCPost,
+				   LFPost,
+				   LPPost){
 	
-	//Creation of the option lists
-	Liste = newArray(RefExtIn, ".mov",".tif", ".TIF", ".TIFF",".stk");
-	labels = newArray("Forward", "Retrograde");
-	RefAnt = newArray(SensAnt,BoxAnt);
-	RefPost = newArray(SensPost,BoxPost);
-	Actions = newArray("Perform movie analyses", "Save settings");
-	//Save settings is for now not functional
+	// Creation of the option lists
+	Liste = newArray(RefExtIn, '.mov', '.tif', '.TIF', '.TIFF', '.stk');
+	labels = newArray('Forward', 'Retrograde');
+	RefAnt = newArray(SensAnt, BoxAnt);
+	RefPost = newArray(SensPost, BoxPost);
+	Actions = newArray('Perform movie analyses', 'Save settings');
+	// Save settings is for now not functional
 	
-	//Dialog window
-	Dialog.create("");
-	Dialog.addMessage("Welcome to A.C.T. version: "+Version);
-	Dialog.addMessage("ACTUAL SETTINGS");
-	Dialog.addChoice("Movie extension: ", Liste);
-	Dialog.addCheckbox("Advanced pretreatment mode ", Mode);
-	Dialog.addNumber("Default resolution: " , Reso, 3, 5, "um/pix");
-	Dialog.addNumber("Default time interval: " , t, 3, 5, "sec");
-	Dialog.addMessage("ANTERIOR CENTROSOME TRACKING ENGINE:");
-	Dialog.addCheckboxGroup(1,2,labels, RefAnt);
-	Dialog.addNumber("Diameter of the Scanning Circle (dsc)",  DCAnt);
-	Dialog.addNumber("Height of the Boundary Box (hbb)",  LPAnt);
-	Dialog.addMessage("POSTERIOR CENTROSOME TRACKING ENGINE:");
-	Dialog.addCheckboxGroup(1,2,labels, RefPost);
-	Dialog.addNumber("Diameter of the Scanning Circle (dsc)",  DCPost);
-	Dialog.addNumber("Height of the Boundary Box (hbb)", LPPost);
-	Dialog.addMessage("");
-	//Dialog.addChoice("", Actions);
+	// Dialog window
+	Dialog.create('');
+	Dialog.addMessage('Welcome to A.C.T. version: ' + Version);
+	Dialog.addMessage('ACTUAL SETTINGS');
+	Dialog.addChoice('Movie extension: ', Liste);
+	Dialog.addCheckbox('Advanced pretreatment mode ', Mode);
+	Dialog.addNumber('Default resolution: ', Reso, 3, 5, 'um/pix');
+	Dialog.addNumber('Default time interval: ' , t, 3, 5, 'sec');
+	Dialog.addMessage('ANTERIOR CENTROSOME TRACKING ENGINE:');
+	Dialog.addCheckboxGroup(1, 2, labels, RefAnt);
+	Dialog.addNumber('Diameter of the Scanning Circle (dsc)', DCAnt);
+	Dialog.addNumber('Height of the Boundary Box (hbb)', LPAnt);
+	Dialog.addMessage('POSTERIOR CENTROSOME TRACKING ENGINE:');
+	Dialog.addCheckboxGroup(1, 2, labels, RefPost);
+	Dialog.addNumber('Diameter of the Scanning Circle (dsc)', DCPost);
+	Dialog.addNumber('Height of the Boundary Box (hbb)', LPPost);
+	Dialog.addMessage('');
+	// Dialog.addChoice('', Actions);
 	Dialog.show();
 	
-	//Choix = Dialog.getChoice();
-	
+	// Choix = Dialog.getChoice();
 	RefExt = Dialog.getChoice();
 	Mode = Dialog.getCheckbox();
 	Reso = Dialog.getNumber();
@@ -694,9 +710,10 @@ function Principal(Version, RefExtIn, Mode, Reso, t, SensAnt, BoxAnt, DCAnt, LFA
 	LPPost = Dialog.getNumber();
 	
 	//Return the "generic" parameters to the main program.
-	R = RefExt+"\t"+Mode+"\t"+Reso+"\t"+t+"\t"+SensAnt+"\t"+BoxAnt+"\t"+DCAnt+"\t"+LPAnt+"\t"+SensPost+"\t"+BoxPost+"\t"+DCPost+"\t"+LPPost;
-	return R;
-	
+	R = RefExt + '\t' + Mode + '\t' + Reso + '\t' + t + '\t' + SensAnt;
+	R += '\t' + BoxAnt + '\t' + DCAnt + '\t' + LPAnt + '\t' + SensPost;
+	R += '\t' + BoxPost + '\t' + DCPost + '\t' + LPPost;
+	return R;	
 } 
   
 }

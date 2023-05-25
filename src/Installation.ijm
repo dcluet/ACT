@@ -29,7 +29,7 @@ do{
 	msg += 'and abiding by the rules\nof distribution of free software. ';
 	msg += 'You can use, modify and/or redistribute the software\n';
 	msg += 'under the terms of the CeCILL license as circulated by CEA, CNRS';
-	msg += ' and INRIA at the following';
+	msg += ' and INRIA at the following ';
 	msg += 'URL\nhttp://www.cecill.info/index.en.html.\n \n';
 	msg += 'As a counterpart to the access to the source code and  rights to ';
 	msg += 'copy, modify and redistribute\ngranted by the license, users are ';
@@ -51,7 +51,7 @@ do{
 	msg += 'that you accept its terms.\n';
 
 	Dialog.create('Instalation wizard for the ACT_Batch macro');
-	Dialog.addMessage('Version 1.2\n2013/09/30');
+	Dialog.addMessage('Version 1.3\n2023_05_12');
 	Dialog.addMessage(msg);
 	Dialog.addMessage('');
 	Dialog.addCheckbox('   I agree to the terms of this license', 0);
