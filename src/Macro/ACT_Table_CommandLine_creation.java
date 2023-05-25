@@ -1,13 +1,12 @@
 macro "CommandLineCreation"{
 
-	Version = "1.32_2023_05_12";
+	Version = "1.42_2023_05_12";
 
 	/*Major modifications:
-
-	Updates in comments
-	Comments in english
-	Explicit naming of hbb and dsc in the GUI
-
+		Adapt the Code for newest version of ImageJ and Fiji > 1.53
+		Updates in comments
+		Comments in english
+		Explicit naming of hbb and dsc in the GUI
 	*/
 
 	//CeCILL Lincense window 
