@@ -1,6 +1,6 @@
 macro "CommandLineCreation"{
 
-	Version = "1.31_2023_05_12";
+	Version = "1.32_2023_05_12";
 
 	/*Major modifications:
 
@@ -84,278 +84,375 @@ macro "CommandLineCreation"{
 	// Height of the boundary box for the posterior centrosome (hbb)
 	LPPost = 1.375;
 
-//Calling the "Principal" function with default parameters and retrieving user's adjusted setting as a string (R)
-R = Principal(1.3, RefExt, Mode, Reso, t, SensAnt, BoxAnt, DCAnt, LFAnt, LPAnt, SensPost, BoxPost, DCPost, LFPost, LPPost);
+	// Calling the "Principal" function with default parameters and retrieving
+	// user's adjusted setting as a string (R)
+	R = Principal(1.3,
+				  RefExt,
+				  Mode,
+				  Reso,
+				  t,
+				  SensAnt, BoxAnt, DCAnt, LFAnt, LPAnt,
+				  SensPost, BoxPost, DCPost, LFPost, LPPost);
 
-R2 = split(R, "\t");	//All the user's adjusted parameters are extracted from the string R 
+	// All the user's adjusted parameters are extracted from the string R 
+	R2 = split(R, "\t");	
 
-	RefExt = R2[0];			//movie extension
-	Mode = parseFloat(R2[1]);	//Advanced mode
-	Reso = parseFloat(R2[2]);	//resolution �m/pix
-	t = parseFloat(R2[3]);		//time gap between 2 images
-	SensAnt = parseFloat(R2[4]);	//Direction of analysis for the anterior centrosome
-	BoxAnt = parseFloat(R2[5]);	//Boundary box type for the anterior centrosome
-	DCAnt = parseFloat(R2[6]);	//Diameter of the scanning circle for the anterior centrosome (dsc)
-	LPAnt = parseFloat(R2[7]);	//Height of the boundary box for the anterior centrosome (hbb)
-	SensPost = parseFloat(R2[8]);	//Direction of analysis for the posterior
-	BoxPost = parseFloat(R2[9]);	//Boundary box type for the posterior centrosome
-	DCPost = parseFloat(R2[10]);	//Diameter of the scanning circle for the posterior centrosome (dsc)
-	LPPost = parseFloat(R2[11]);	//Height of the boundary box for the posterior centrosome (hbb)
+	// movie extension
+	RefExt = R2[0];
+	// Advanced mode
+	Mode = parseFloat(R2[1]);
+	// resolution um/pix
+	Reso = parseFloat(R2[2]);
+	// time gap between 2 images
+	t = parseFloat(R2[3]);
+	// Direction of analysis for the anterior centrosome
+	SensAnt = parseFloat(R2[4]);
+	// Boundary box type for the anterior centrosome
+	BoxAnt = parseFloat(R2[5]);
+	// Diameter of the scanning circle for the anterior centrosome (dsc)
+	DCAnt = parseFloat(R2[6]);
+	// Height of the boundary box for the anterior centrosome (hbb)
+	LPAnt = parseFloat(R2[7]);
+	// Direction of analysis for the posterior
+	SensPost = parseFloat(R2[8]);
+	// Boundary box type for the posterior centrosome
+	BoxPost = parseFloat(R2[9]);
+	// Diameter of the scanning circle for the posterior centrosome (dsc)
+	DCPost = parseFloat(R2[10]);
+	// Height of the boundary box for the posterior centrosome (hbb)
+	LPPost = parseFloat(R2[11]);
 
-//Dialog window allowing the user to indicate the location of the root folder containing all the movies to process.
-//Downstream folders will all be analyzed to find movies with the correct extension.
-dir = getDirectory("Folder");
+	/*
+	Dialog window allowing the user to indicate the location of the root folder 
+	containing all the movies to process. Downstream folders will all be 
+	analyzed to find movies with the correct extension.
+	*/
+	dir = getDirectory('Folder');
 
 	//Empty the log window
-	print("");
-	print( "\\Clear");
+	print('');
+	print('\\Clear');
 	
-	//Exploration of the folder and creation of the list of movies using the "listFiles function"
+	// Exploration of the folder and creation of the list of movies using the
+	// "listFiles function"
 	listFiles(dir, RefExt); 
 	
-	//Save the paths of the movies in the "ListMovies.txt" file
-	selectWindow("Log");
-	NomRapport = ""+dir+"ListMovies.txt";
-	saveAs("Text", NomRapport); 
+	// Save the paths of the movies in the "ListMovies.txt" file
+	selectWindow('Log');
+	NomRapport = '' + dir + 'ListMovies.txt';
+	saveAs('Text', NomRapport); 
 
-	//Empty and close the Log window
-	print( "\\Clear");
-	run("Close");
+	// Empty and close the Log window
+	print('\\Clear');
+	run('Close');
 
-//Retrieve the list of movie from the "ListMovies.txt" file
-RefMovies = File.openAsString(dir+"ListMovies.txt");
+	// Retrieve the list of movie from the "ListMovies.txt" file
+	RefMovies = File.openAsString(dir + 'ListMovies.txt');
 
-//If the list is empty the program alerts the user and exits.
-if (RefMovies == ""){
-	Dialog.create("ERROR");
-	Dialog.addMessage("No movie with the " + RefExt +" extension was fou nd\nin the folder:\n"+dir);
-	Dialog.show();
-	exit();
-}
+	//If the list is empty the program alerts the user and exits.
+	if (RefMovies == ''){
+		Dialog.create('ERROR');
+		warn = 'No movie with the ' + RefExt;
+		warn += ' extension was fou nd\nin the folder:\n' + dir;
+		Dialog.addMessage();
+		Dialog.show();
+		exit();
+	}
 
+	// Extract all the paths of the movies
+	ListMovies = split(File.openAsString(dir + 'ListMovies.txt'), '\n');
 
-//Extract all the paths of the movies
-ListMovies = split(File.openAsString(dir+"ListMovies.txt"), "\n");
+	// Create a list with the movie names for the GUI.
+	ListInput = newArray(lengthOf(ListMovies));
+	for (m=0; m<lengthOf(ListMovies); m++){
+		ListInput[m] = File.getName(ListMovies[m]);
+	}
 
-//Create a list with the movie names for the GUI.
-ListInput =newArray(lengthOf(ListMovies));
-for (m=0; m<lengthOf(ListMovies); m++){
-	ListInput[m] = File.getName(ListMovies[m]);
-}
+	if (File.exists(dir +'ListCommands.txt') == 0){
+		// Creation of the output File if not existing
+		CLS = File.open(dir + 'ListCommands.txt');
+		print(CLS, '');
+		File.close(CLS);
+	}else{
+		// Retrieve the names of the movies already processed
+		// (for multi-session pre-treatment).
+		DejaFait = File.openAsString(dir + 'ListCommands.txt');
+		ListingFait = split(DejaFait, '\n');
 
-//Creation of the output File
-if(File.exists(dir+"ListCommands.txt")==0){
-CLS = File.open(dir+"ListCommands.txt");
-print(CLS,"");
-File.close(CLS);
-}else{
-//Retrieve the names of the movies already processed (for multi-session pre-treatment).
-DejaFait = File.openAsString(dir+"ListCommands.txt");
-ListingFait = split(DejaFait,"\n");
-
-//Compare the list of movies found and the list of movies already pre-treated
-for(i=0; i<lengthOf(ListMovies); i++){
-	for(j=0; j<lengthOf(ListingFait); j++){
-		if (ListingFait[j] != ""){
-				Ligne = split(ListingFait[j],"\t");
-								
-				if(Ligne[0]==ListMovies[i]){	//Movies already pre-treated are remove from the ListMovies array.
-					ListMovies[i] ="";
-					j=lengthOf(ListingFait)+1;
+		// Compare the list of movies found and the list of 
+		// movies already pre-treated
+		for(i=0; i<lengthOf(ListMovies); i++){
+			for(j=0; j<lengthOf(ListingFait); j++){
+				if (ListingFait[j] != ''){
+					Ligne = split(ListingFait[j], '\t');
+					// Remove from the ListMovies array the pre-teated ones.					
+					if (Ligne[0] == ListMovies[i]){	
+						ListMovies[i] = '';
+						j = lengthOf(ListingFait) + 1;
+					}
 				}
+			}
 		}
 	}
-}
 
-}
+	// Creation of the listing of pre-treated movie for the GUI.
+	DejaFait = File.openAsString(dir + 'ListCommands.txt');
+	ListingFait = split(DejaFait, '\n');
+	n = lengthOf(ListingFait);
+	ListOutput = newArray(lengthOf(ListingFait) - 1);
+	nFilm = 0;
 
+	// If some movies have already been pre-treated...
+	if(n > 0){
+		for (m=1; m<lengthOf(ListingFait); m++){
+			if(ListingFait[m] != ''){
+				// add the pre-treated movie name to the GUI listing.
+				nFilm = nFilm + 1;
+				Ligne = split(ListingFait[m], '\t');
+				ListOutput[m-1] = File.getName(Ligne[0]);
+			}
+		}
 
-//Creation of the listing of pre-treated movie for the GUI.
-DejaFait = File.openAsString(dir+"ListCommands.txt");
-ListingFait = split(DejaFait,"\n");
-n = lengthOf(ListingFait);
-ListOutput =newArray(lengthOf(ListingFait)-1);
-nFilm = 0;
-
-//If some movies have already been pre-treated...
-if(n>0){
-for (m=1; m<lengthOf(ListingFait); m++){
-	if(ListingFait[m] != ""){
-	nFilm = nFilm + 1;
-	Ligne = split(ListingFait[m], "\t");
-	ListOutput[m-1] = File.getName(Ligne[0]);	//add the pre-treated movie name to the GUI listing.
-	}
-}
-}else{
-
-//If no movie have been pre-treated the GUI listing is empty.
-ListOutput = newArray("None");
-}
-
-if(lengthOf(ListOutput)==0){
-ListOutput=newArray("None");
-}
-
-
-//User interface indicating the number of identified movies to treat, those that are already pre-treated and option for reseting command lines.
-OptionErase= newArray("Proceed", "Reset Command lines");
-
-Dialog.create("End of the exploration of the root folder");
-Dialog.addMessage("The program has found "+ lengthOf(ListMovies)+ " movies\nwith the "+RefExt+" extension.");
-Dialog.addChoice("Movie list:", ListInput);
-Dialog.addMessage(""+nFilm+" movies have already been pre-treated.");
-Dialog.addChoice("Movie list:", ListOutput);
-Dialog.addMessage("You may want reseting the analysis parameters.\nThus choose the reseting option.");
-Dialog.addChoice("Reseting option:", OptionErase);
-Dialog.show();
-
-a = Dialog.getChoice();	// a and b are not used (the lists are just here for information). But they need to be fed so E can be properly fed with the reseting option.
-b = Dialog.getChoice();
-
-E = Dialog.getChoice();
-
-//Reseting the command lines if chosen by the user.
-if(E=="Reset Command lines"){
-CLS = File.open(dir+"ListCommands.txt");
-print(CLS,"");
-File.close(CLS);
-
-CLS = File.open(dir+"ListMovies.txt");
-print(CLS,RefMovies);
-File.close(CLS);
-ListMovies = split(File.openAsString(dir+"ListMovies.txt"), "\n");
-}
-
-/*LOOP FOR MOVIE PRE-TREATMENT
-	The listing is contained in the ListMovies array
-	The array contains empty slots corresponding to the pre-treated movies, except if user has reset the commandline.
-	If all movies have been pre-treated the program jumps directly to the job launching (delayed submission).
-*/
- 
-for(i=0; i<lengthOf(ListMovies); i++){
-if(ListMovies[i] !=""){
-
-
-//Path of the movie to treat
-	Path1 = ListMovies[i];
-
-//Open the movie
-	
-	if(RefExt == ".mov"){
-	run("Using QuickTime...", "open=["+Path1+"] convert");	//Depending on the extension the program use the quicktime plugin... 
 	}else{
-	open(Path1);						//...or IJ opener
+		// If no movie have been pre-treated the GUI listing is empty.
+		ListOutput = newArray('None');
 	}
 
-//Change properties
-	getDimensions(width, height, channels, slices, frames);
-	Stack.setXUnit("pixel");
-	run("Properties...", "channels=" + channels + " slices=" + slices + " frames=" + frames + " pixel_width=1 pixel_height=1 voxel_depth=1.0000000");
+	if(lengthOf(ListOutput) == 0){
+		ListOutput = newArray('None');
+	}
 
+	// User interface indicatES the number of identified movies to treat,
+	// those that are already pre-treated and option for reseting command lines.
+	OptionErase = newArray('Proceed', 'Reset Command lines');
 
-//Get movie dimension and name	
-	NomImage = getTitle();
-	H = getHeight();
-	W = getWidth();
+	Dialog.create('End of the exploration of the root folder');
+	msg1 = 'The program has found ' + lengthOf(ListMovies);
+	msg1 += ' movies\nwith the ' + RefExt + ' extension.';
+	Dialog.addMessage(msg1);
+	Dialog.addChoice('Movie list:', ListInput);
+	Dialog.addMessage('' + nFilm + ' movies have already been pre-treated.');
+	Dialog.addChoice('Movie list:', ListOutput);
+	msg2 = 'You may want reseting the analysis parameters.\n';
+	msg2 += 'Thus choose the reseting option.';
+	Dialog.addMessage(msg2);
+	Dialog.addChoice('Reseting option:', OptionErase);
+	Dialog.show();
 
-//Manual drawing of the zygote
-//As the shape of the zygote is changing the program displays the frame corresponding to the half of the movie.
-	setSlice(round(nSlices()/2));
-	makeRectangle(50, 50, W-100, H-100);	//A rectangle is automatically drawn on the movie. The user can modify it
-	waitForUser("Movie "+i+" out of "+lengthOf(ListMovies)+"\n\nSelect the ZYGOTE then press OK\n\nIF YOU WANT TO STOP AND ESC THE MACRO IT IS NOW");
-	roiManager("Add"); 	//The rectangle drawn by the user is stored in the roiManager 
+	// a and b are not used (the lists are just here for information). 
+	// But they need to be fed so E can be properly fed with the
+	// reseting option.
+	a = Dialog.getChoice();
+	b = Dialog.getChoice();
+	E = Dialog.getChoice();
 
-//Initialisation of the command line	
-CL="";
+	// Reseting the command lines if chosen by the user.
+	if (E == 'Reset Command lines'){
+		CLS = File.open(dir + 'ListCommands.txt');
+		print(CLS, '');
+		File.close(CLS);
 
-//Update the command line with the path of the movie
-CL = ""+CL + Path1 + "\t";	
+		CLS = File.open(dir + 'ListMovies.txt');
+		print(CLS, RefMovies);
+		File.close(CLS);
+		ListMovies = split(File.openAsString(dir + 'ListMovies.txt'), '\n');
+	}
 
-//Crop of the zygote in all frames
-	//Get "zygote rectangle" position and dimensions
-	roiManager("Select", roiManager("count")-1);
-	List.setMeasurements;
-	Xz = List.getValue("BX");
-	Yz = List.getValue("BY");
-	Wz = List.getValue("Width");
-	Hz = List.getValue("Height");
+	/*
+	LOOP FOR MOVIE PRE-TREATMENT
+	The listing is contained in the ListMovies array
+	The array contains empty slots corresponding to the pre-treated movies,
+	except if user has reset the commandline.
+	If all movies have been pre-treated the program jumps directly to the 
+	job launching (delayed submission).
+	*/
+ 
+	for(i=0; i<lengthOf(ListMovies); i++){
+		if (ListMovies[i] != ''){
+			// Path of the movie to treat
+			Path1 = ListMovies[i];
+
+			// Open the movie
+			// Depending on the extension the program use the quicktime plugin...
+			if(RefExt == '.mov'){
+				run('Using QuickTime...', 
+					'open=[' + Path1 + '] convert'); 
+			}else{
+				//...or IJ opener
+				open(Path1);
+			}
+
+			// Change properties to avoid issue between measure in pixels and
+			// drawing in microns...
+			getDimensions(width, height, channels, slices, frames);
+			Stack.setXUnit('pixel');
+			cmd = 'channels=' + channels + ' slices=' + slices;
+			cmd += ' frames=' + frames;
+			cmd += ' pixel_width=1 pixel_height=1 voxel_depth=1.0000000'; 
+			run('Properties...', cmd);
+
+			// Get movie dimension and name	
+			NomImage = getTitle();
+			H = getHeight();
+			W = getWidth();
+
+			// Manual drawing of the zygote
+			// As the shape of the zygote is changing the program displays the
+			// frame corresponding to the half of the movie.
+			setSlice(round(nSlices() / 2));
+
+			// A rectangle is automatically drawn on the movie. 
+			// The user can modify it
+			makeRectangle(50, 50, W-100, H-100);
+			msg = 'Movie ' + i + ' out of ' + lengthOf(ListMovies);
+			msg += '\n\nSelect the ZYGOTE then press OK\n\nIF YOU WANT TO STOP';
+			msg += ' AND ESC THE MACRO IT IS NOW';	
+			waitForUser(msg);
+
+			// The rectangle drawn by the user is stored in the roiManager 
+			roiManager("Add"); 	
+
+			// Initialisation of the command line	
+			CL = '';
+
+			// Update the command line with the path of the movie
+			CL += Path1 + '\t';	
+
+			// Crop of the zygote in all frames
+			// Get "zygote rectangle" position and dimensions
+			roiManager('Select', roiManager('count') - 1);
+			List.setMeasurements;
+			Xz = List.getValue('BX');
+			Yz = List.getValue('BY');
+			Wz = List.getValue('Width');
+			Hz = List.getValue('Height');
+			
+			// Update command line with "zygote rectangle" position 
+			// and dimensions
+			CL += '' + Xz + '\t' + Yz + '\t' + Wz + '\t' + Hz+ '\t';
 	
-	//Update command line with "zygote rectangle" position and dimensions
-	CL = ""+CL + Xz +"\t" + Yz+"\t"+ Wz+"\t"+ Hz+ "\t";
+			// Crop the zygote and update the dimensions of the movie
+			run('Crop');
+			H = getHeight();
+			W = getWidth();
 	
-	//Crop the zygote and update the dimensions of the movie
-	run("Crop");
-	H = getHeight();
-	W = getWidth();
+			// Height of the zygote in the reference movie (in pix)
+			HRef = 518;
+ 			// Diameter of scanning circle for the reference movie (dsc in pix).
+			DiametreCercleR = 60;	
 	
+			// Calculating the ratio between the actual movie dimension and 
+			// the reference one
+			ratio = H / HRef;
+	
+			/*
+			Adapt research parameters to the actual dimension of the movie.
+			The research algorythm will then be fitted to the movie resolution, 
+			making the user's parameters only dependent on strain 
+			and/or phenotype
+			*/
 
-	HRef = 518;		//Height of the zygote in the reference movie (in pix)
- 	DiametreCercleR = 60;	//Diameter of scanning circle for the reference movie (dsc in pix).	
-	
-	//Calculating the ratio between the actual movie dimension and the reference one
-	ratio = H/HRef;
-	
-	//Adapt research parameters to the actual dimension of the movie.
-	//The research algorythm will then be fitted to the movie resolution, making the user's parameters only dependent on strain and/or phenotype
-	LargFenetre = round(LFAnt*ratio);				//Width of the focus square where the research will be performed
-	LargPlotProfile = round(LPAnt*ratio);			//Height of the boundary box (hbb)
-	DiametreCercle = round(DiametreCercleR*ratio);			//Diameter of the scanning Circle (dsc)
+			// Diameter of the scanning Circle (dsc)
+			DiametreCercle = round(DiametreCercleR * ratio);			
 
-	//Cut the movie using the function MontageFilm
-	Parametres = MontageFilm(Reso, t);
+			// Cut the movie using the function MontageFilm
+			Parametres = MontageFilm(Reso, t);
 	
-	//The beginning, Origine and ending frame of the movie are retrieved from the function MontageFilm
-	Sstart = Parametres[0];
-	Origine = Parametres[1];
-	Send= Parametres[2];
+			// The beginning, Origine and ending frame of the movie are 
+			// retrieved from the function MontageFilm
+			Sstart = Parametres[0];
+			Origine = Parametres[1];
+			Send= Parametres[2];
 	
-	//Manual positioning of the anterior centrosome on beginning frame
-	setSlice(Sstart);
-	makeOval(DiametreCercle, DiametreCercle, DiametreCercle, DiametreCercle);	//Automatic drawing of a circle. User can modify its position
-	wait(500);	//To avoid the waitForUser commands to be considered as redundant and make ImageJ bugging
-	waitForUser("Position this circle on the center\nof the anterior spindle.\nThen pressOK.");
-	roiManager("Add");
-		//Get position of the center of the centrosome
-		roiManager("Select", roiManager("count")-1);
-		List.setMeasurements;
-		Xant = List.getValue("X");
-		Yant = List.getValue("Y");
+			// Manual positioning of the anterior centrosome on beginning frame
+			setSlice(Sstart);
+			// Automatic drawing of a circle. User can modify its position
+			makeOval(DiametreCercle,
+					 DiametreCercle,
+					 DiametreCercle,
+					 DiametreCercle);
+			
+			// To avoid the waitForUser commands to be considered as redundant 
+			// and make ImageJ bugging
+			wait(500);
+			msg = 'Position this circle on the center\n';
+			msg += 'of the anterior spindle.\nThen press OK.';
+			waitForUser(msg);
+			roiManager('Add');
+			
+			// Get position of the center of the centrosome
+			roiManager('Select', roiManager('count') - 1);
+			List.setMeasurements;
+			Xant = List.getValue('X');
+			Yant = List.getValue('Y');
 
-	//Manual positioning of the posterior centrosome on beginning frame
-	setSlice(Sstart);
-	makeOval(W-2*DiametreCercle, DiametreCercle, DiametreCercle, DiametreCercle);	//Automatic drawing of a circle. User can modify its position
-	waitForUser("Position this circle on the center\nof the posterior spindle.\nThen pressOK.");
-	wait(500);	//To avoid the waitForUser commands to be considered as redundant and make ImageJ bugging
-	roiManager("Add");
-		//Get position of the center of the centrosome
-		roiManager("Select", roiManager("count")-1);
-		List.setMeasurements;
-		Xpost = List.getValue("X");
-		Ypost= List.getValue("Y");
+			// Manual positioning of the posterior centrosome on beginning frame
+			setSlice(Sstart);
+			
+			// Automatic drawing of a circle. User can modify its position
+			makeOval(W - 2 * DiametreCercle,
+					 DiametreCercle,
+					 DiametreCercle,
+					 DiametreCercle);
+			msg = 'Position this circle on the center\n';
+			msg += 'of the posterior spindle.\nThen press OK.';
+			waitForUser(msg);
+			
+			// To avoid the waitForUser commands to be considered as redundant 
+			// and make ImageJ bugging
+			wait(500);
+			roiManager('Add');
 
-	//Manual positioning of the anterior centrosome on ending frame
-	setSlice(Send);
-	makeOval(DiametreCercle, DiametreCercle, DiametreCercle, DiametreCercle);	//Automatic drawing of a circle. User can modify its position
-	waitForUser("Position this circle on the center\nof the anterior spindle.\nThen pressOK.");
-	wait(500);	//To avoid the waitForUser commands to be considered as redundant and make ImageJ bugging
-	roiManager("Add");
-		//Get position of the center of the centrosome
-		roiManager("Select", roiManager("count")-1);
-		List.setMeasurements;
-		XantF = List.getValue("X");
-		YantF = List.getValue("Y");
+			// Get position of the center of the centrosome
+			roiManager('Select', roiManager('count') - 1);
+			List.setMeasurements;
+			Xpost = List.getValue('X');
+			Ypost= List.getValue('Y');
 
-	//Manual positioning of the posterior centrosome on beginning frame
-	setSlice(Send);
-	makeOval(W-2*DiametreCercle, DiametreCercle, DiametreCercle, DiametreCercle);	//Automatic drawing of a circle. User can modify its position
-	waitForUser("Position this circle on the center\nof the posterior spindle.\nThen pressOK.");
-	wait(500);	//To avoid the waitForUser commands to be considered as redundant and make ImageJ bugging
-	roiManager("Add");
-		//Get position of the center of the centrosome
-		roiManager("Select", roiManager("count")-1);
-		List.setMeasurements;
-		XpostF = List.getValue("X");
-		YpostF= List.getValue("Y");
+			// Manual positioning of the anterior centrosome on ending frame
+			setSlice(Send);
+			
+			// Automatic drawing of a circle. User can modify its position
+			makeOval(DiametreCercle,
+					 DiametreCercle,
+					 DiametreCercle,
+					 DiametreCercle);
+			msg = 'Position this circle on the center\n';
+			msg += 'of the anterior spindle.\nThen press OK.';
+			waitForUser(ms);
+
+			// To avoid the waitForUser commands to be considered as redundant 
+			// and make ImageJ bugging
+			wait(500);
+			roiManager('Add');
+		
+			// Get position of the center of the centrosome
+			roiManager('Select', roiManager('count') - 1);
+			List.setMeasurements;
+			XantF = List.getValue('X');
+			YantF = List.getValue('Y');
+
+			// Manual positioning of the posterior centrosome on beginning frame
+			// Automatic drawing of a circle. User can modify its position
+			setSlice(Send);
+			makeOval(W - 2 * DiametreCercle,
+					 DiametreCercle,
+					 DiametreCercle,
+					 DiametreCercle);
+			msg = 'Position this circle on the center\n';
+			msg += 'of the posterior spindle.\nThen pressOK.';
+			waitForUser(msg);
+
+			// To avoid the waitForUser commands to be considered as redundant 
+			// and make ImageJ bugging
+			wait(500);
+			roiManager('Add');
+
+			// Get position of the center of the centrosome
+			roiManager('Select', roiManager('count') - 1);
+			List.setMeasurements;
+			XpostF = List.getValue('X');
+			YpostF= List.getValue('Y');
 
 //Display advanced settings
 	
